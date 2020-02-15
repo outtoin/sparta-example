@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Comment</title>
+
+    <!-- 합쳐지고 최소화된 최신 CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Nanum+Myeongjo&display=swap" rel="stylesheet">
+
+    <script type="text/javascript">
+        //페이지 리로드 방지
+        $(document).ready(function ($) {
+            $(document).on('submit', '#submit-form', function (event) {
+                event.preventDefault();
+            });
+            $("some-selector").on('click', function () {
+				// Some codes...
+				// some-selector를 가진 object가 클릭되었을 때 실행되는 로직을 추가하시면 됩니다.
+			})
+        });
+
+        function HideAndShow() {
+            if ($("#postingbox").css("display") == "none") {
+                $("#postingbox").show();
+                $("#openButton").text("▲ 포스팅박스 닫기");
+            } else {
+                $("#postingbox").hide();
+                $("#openButton").text("▼ 포스팅박스 열기");
+            }
+        }
+
+        function GetArticles() {
+			$.ajax({
+				type: "GET",
+				url: "/article",
+				success: function (response) {
+					console.log(response)
+				}
+			});
+
+        	// Some codes...
+			// GET /article 에 있는 모든 기사에 대해서 카드를 만듭니다.
+			// 카드의 제목에는 title, 카드의 image는 기사 이미지, 카드의 본문에는 description, 카드의 comment에는 comment
+		}
+
+        function savePost() {
+            let articleURL = $("#articleURL").val();
+            let commentValue = $("#Commentbox").val();
+
+            if (articleURL == "") {
+                alert('기사 URL을 입력해주세요.');
+            } else if (commentValue == "") {
+                alert('코멘트를 입력해주세요.');
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "/article",
+                    data: {url: articleURL},
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+                    }
+                });
+            }
+        }
+
+        function deleteCard() {
+            if ($("div.card-columns").css("display") == "none") {
+                alert("삭제할 글이 없습니다");
+            } else {
+                $("div").remove(".card");
+                // $("div.card-columns").hide();
+            }
+        }
+
+    </script>
+
+    <style type="text/css">
+        * {
+            font-family: 'Nanum Myeongjo', serif;
+        }
+
+        .wrap {
+            width: 900px;
+            margin: auto;
+        }
+
+        .comment {
+            color: blue;
+            font-weight: bold;
+        }
+
+        .form-post {
+            max-width: 500px;
+            padding: 2rem;
+            margin: 2rem auto;
+            border-color: #e9ecef;
+            border-radius: 0.3rem;
+            border: solid;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+<div class="wrap">
+    <div class="jumbotron">
+        <h1 class="display-4"> 기사 메모장 </h1>
+        <p class="lead">
+            인상 깊었던 기사를 저장해두고, 나중에 볼 수 있는 공간입니다
+        </p>
+        <hr class="my-4">
+        <p class="lead">
+			<button onclick="GetArticles()" id="getButton" class="btn btn-primary btn-info">기사 가져오기</button>
+            <button onclick="HideAndShow()" id="openButton" class="btn btn-primary btn-lg"> ▼ 포스팅박스 열기</button>
+            <button onclick="deleteCard()" class="btn btn-danger btn-lg"> 전체 삭제</button>
+        </p>
+    </div>
+
+    <div class="form-post" id="postingbox" style="display:none;">
+        <form id="submit-form">
+            <div class="form-group">
+                <label for="articleURL"> 기사 url </label>
+                <input type="text" class="form-control" id="articleURL" aria-describedby="emailHelp">
+            </div>
+            <div class="form-group">
+                <label for="Commentbox"> 간단 코멘트 </label>
+                <textarea class="form-control" id="Commentbox" aria-describedby="emailHelp"></textarea>
+            </div>
+            <button onclick="savePost()" type="submit" class="btn btn-primary"> 저장하기</button>
+        </form>
+    </div>
+
+    <div class="card-columns">
+
+    </div>
+</body>
+</html>
