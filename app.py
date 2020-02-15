@@ -8,7 +8,7 @@ def hello():
     return render_template('index.html')
 
 
-@app.route('/healthz')
+@app.route('/healthcheck')
 def healthcheck():
     return jsonify({'result': 'success'})
 
